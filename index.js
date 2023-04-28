@@ -18,7 +18,11 @@ app.use(express.json());
 dbConnection();
 
 app.use('/api/users', require('./routes/users'));
+app.use('/api/playlists', require('./routes/playlists'));
+app.use('/api/songs', require('./routes/songs'));
 app.use('/api/login', require('./routes/auth'));
+app.use('/api/all', require('./routes/searches'));
+app.use('/api/upload', require('./routes/uploads'));
 
 
-app.listen(process.env.PORT, () => console.log('server running in port' + process.env.PORT));
+app.listen(process.env.PORT, () => console.log('server running in port ' + process.env.PORT));

@@ -9,7 +9,6 @@ const login = async (req, res = response) => {
 
 
     try {
-
         const userDB = await User.findOne({ email });
 
         if (!userDB) {
