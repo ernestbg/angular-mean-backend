@@ -18,7 +18,10 @@ router.post('/',
     createSong);
 
 router.put('/:id',
-    [],
+    [
+        check('name', 'name of song required').not().isEmpty(),
+        validateFields
+    ],
     updateSong);
 
 router.delete('/:id', validateJWT, deleteSong);

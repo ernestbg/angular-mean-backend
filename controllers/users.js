@@ -123,7 +123,7 @@ const deleteUser = async (req, res = response) => {
     const uid = req.params.id;
     try {
 
-        const userDB = await user.findById(uid);
+        const userDB = await User.findById(uid);
 
         if (!userDB) {
             return res.status(404).json({
@@ -132,7 +132,7 @@ const deleteUser = async (req, res = response) => {
             });
         }
 
-        await User.findByIdAndDelete(uid)
+        await User.findByIdAndDelete(uid);
 
         res.json({
             ok: true,
@@ -146,9 +146,8 @@ const deleteUser = async (req, res = response) => {
             ok: false,
             msg: 'contact with admin'
 
-        })
+        });
     }
-
 }
 
 module.exports = { getUsers, createUser, updateUser, deleteUser }

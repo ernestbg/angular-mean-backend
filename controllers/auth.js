@@ -50,7 +50,7 @@ const googleSignIn = async (req, res = response) => {
     try {
         const { email, name, picture } = await googleVerify(req.body.token);
 
-        const userDB = await User.findOne({email});
+        const userDB = await User.findOne({ email });
         let user;
 
         if (!userDB) {
@@ -72,8 +72,8 @@ const googleSignIn = async (req, res = response) => {
 
         res.json({
             ok: true,
-            email, 
-            name, 
+            email,
+            name,
             picture,
             token
         });
@@ -87,5 +87,18 @@ const googleSignIn = async (req, res = response) => {
     }
 }
 
+const renewToken = async (req, res = response) => {
 
-module.exports = { login, googleSignIn }
+    const uid = req.uid;
+
+    const token = await createJWT(uid);
+
+    res.json({
+        ok: true,
+        token
+    });
+}
+
+
+
+module.exports = { login, googleSignIn, renewToken }

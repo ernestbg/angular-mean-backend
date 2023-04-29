@@ -17,7 +17,10 @@ router.post('/',
     createPlaylist);
 
 router.put('/:id',
-    [],
+    [
+        check('name', 'names of playlist required').not().isEmpty(),
+        validateFields
+    ],
     updatePlaylist);
 
 router.delete('/:id', validateJWT, deletePlaylist);
