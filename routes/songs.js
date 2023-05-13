@@ -3,7 +3,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validate-fields');
 const { validateJWT } = require('../middlewares/validate-jwt');
-const { getSongs, createSong, updateSong, deleteSong } = require('../controllers/songs')
+const { getSongs, getSongById, createSong, updateSong, deleteSong } = require('../controllers/songs');
 const router = Router();
 
 
@@ -26,5 +26,6 @@ router.put('/:id',
 
 router.delete('/:id', validateJWT, deleteSong);
 
+router.get('/:id', validateJWT, getSongById);
 
 module.exports = router;

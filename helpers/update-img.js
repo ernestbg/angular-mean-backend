@@ -11,10 +11,9 @@ const deleteImage = (path) => {
 
 let oldPath = '';
 
-const updateImg = async (tipe, id, filename) => {
+const updateImg = async (type, id, filename) => {
 
-
-    switch (tipe) {
+    switch (type) {
         case 'playlists':
             const playlist = await Playlist.findById(id);
             if (!playlist) {
@@ -26,7 +25,6 @@ const updateImg = async (tipe, id, filename) => {
             playlist.img = filename;
             await playlist.save();
             return true;
-            break;
 
         case 'users':
             const user = await User.findById(id);
@@ -39,7 +37,18 @@ const updateImg = async (tipe, id, filename) => {
             user.img = filename;
             await user.save();
             return true;
-            break;
+
+        case 'songs':
+            const song = await Song.findById(id);
+            if (!song) {
+                return false;
+            }
+
+            oldPath = `./uploads/songs/${song.img}`;
+            deleteImage(oldPath);
+            song.img = filename;
+            await song.save();
+            return true;
     }
 
 }

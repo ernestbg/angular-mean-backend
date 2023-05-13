@@ -1,14 +1,12 @@
 const { response } = require('express');
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
-const user = require('../models/user');
 const { createJWT } = require('../helpers/jwt');
 
 
 const getUsers = async (req, res) => {
 
     const from = Number(req.query.from) || 0;
-    console.log(from);
 
     // const users = await User
     //     .find({}, 'name email role google')
@@ -25,12 +23,11 @@ const getUsers = async (req, res) => {
         User.countDocuments()
     ]);
 
-    res.json(
-        {
-            ok: true,
-            users,
-            total
-        });
+    res.json({
+        ok: true,
+        users,
+        total
+    });
 }
 
 const createUser = async (req, res = response) => {
@@ -57,8 +54,7 @@ const createUser = async (req, res = response) => {
         // Generar JWT
         const token = await createJWT(user.id);
 
-        res.json(
-            {
+        res.json({
                 ok: true,
                 user,
                 token
@@ -77,10 +73,8 @@ const createUser = async (req, res = response) => {
 
 const updateUser = async (req, res = response) => {
     const uid = req.params.id;
-    const { name, role, email } = req.body;
-
     try {
-        const userDB = await user.findById(uid);
+        const userDB = await User.findById(uid);
 
         if (!userDB) {
             return res.status(404).json({
@@ -90,17 +84,25 @@ const updateUser = async (req, res = response) => {
         }
 
         const { password, google, email, ...fields } = req.body;
+        if (userDB.email !== email ) {
 
-        if (userDB.email !== email) {
-            const emailExists = await User.findOne({ email });
-            if (emailExists) {
+            const emailExists = await Usuario.findOne({ email });
+            if ( emailExists ) {
                 return res.status(400).json({
                     ok: false,
-                    msg: 'el email ya esta registrado'
+                    msg: 'Ya existe un usuario con ese email'
                 });
             }
         }
-        fields.email = email;
+        if (!userDB.google) {
+            fields.email = email;
+            
+        } else if (userDB.email !== email) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Usuario de google no puede cambiar su correo'
+            });
+        }
 
         const userUpdated = await User.findByIdAndUpdate(uid, fields, { new: true });
 

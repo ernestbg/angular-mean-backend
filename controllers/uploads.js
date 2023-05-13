@@ -7,18 +7,15 @@ const { updateImg } = require("../helpers/update-img");
 
 const fileUpload = (req, res = response) => {
 
-    const { tipe, id } = req.params;
+    const { type, id } = req.params;
 
-    const validTipes = ['playlists', 'users'];
-    if (!validTipes.includes(tipe)) {
+    const validtypes = ['playlists', 'users', 'songs'];
+    if (!validtypes.includes(type)) {
         return res.status(400).json({
             ok: false,
             msg: 'must be user, song or playlist'
         });
     }
-
-
-
 
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
@@ -47,7 +44,7 @@ const fileUpload = (req, res = response) => {
 
 
     // Path para guardar la imagen
-    const uploadPath = `./uploads/${tipe}/${filename}`;
+    const uploadPath = `./uploads/${type}/${filename}`;
     file.mv(uploadPath, (err) => {
         if (err) {
             return res.status(500).json({
@@ -56,12 +53,8 @@ const fileUpload = (req, res = response) => {
             });
         }
 
-
         // Update DB
-        updateImg(tipe, id, filename);
-
-
-
+        updateImg(type, id, filename);
 
         res.json({
             ok: true,
@@ -72,15 +65,15 @@ const fileUpload = (req, res = response) => {
 }
 
 const returnImg = (req, res = response) => {
-    const tipe = req.params.tipe;
+    const type = req.params.type;
     const photo = req.params.photo;
 
-    const pathImg = path.join(__dirname, `../uploads/${tipe}/${photo}`);
+    const pathImg = path.join(__dirname, `../uploads/${type}/${photo}`);
 
     if (fs.existsSync(pathImg)) {
         res.sendFile(pathImg);
     } else {
-        const pathImg=path.join(__dirname, `../uploads/no-img.jpg`);
+        const pathImg = path.join(__dirname, `../uploads/no-img.jpg`);
         res.sendFile(pathImg);
     }
 

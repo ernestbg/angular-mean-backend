@@ -10,8 +10,8 @@ const router = Router();
 
 router.use(expressFileUpload());
 
-router.put('/:tipe/:id', validateJWT, fileUpload );
-router.get('/:tipe/:photo', validateJWT, returnImg );
+router.put('/:type/:id', validateJWT, fileUpload );
+router.get('/:type/:photo', returnImg );
 
 
 module.exports = router;

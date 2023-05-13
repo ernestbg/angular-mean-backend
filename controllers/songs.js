@@ -9,6 +9,23 @@ const getSongs = async (req, res = response) => {
         songs
     });
 }
+
+const getSongById = async (req, res = response) => {
+    const songId = req.params.id;
+    try {
+        const song = await Song.findById(songId).populate('user', 'name img').populate('playlist', 'name img');
+        res.json({
+            ok: true,
+            song
+        });
+    } catch (error) {
+        res.json({
+            ok: false,
+            msg: 'error'
+        });
+    }
+}
+
 const createSong = async (req, res = response) => {
 
     const uid = req.uid;
@@ -19,7 +36,6 @@ const createSong = async (req, res = response) => {
 
     try {
         const songDB = await song.save();
-
         res.json({
             ok: true,
             song: songDB
@@ -51,7 +67,7 @@ const updateSong = async (req, res = response) => {
             user: uid
         };
 
-        const songUpdated = await Song.findByIdAndUpdate(songId, songChanges, {new:true});
+        const songUpdated = await Song.findByIdAndUpdate(songId, songChanges, { new: true });
 
         res.json({
             ok: true,
@@ -99,4 +115,4 @@ const deleteSong = async (req, res = response) => {
 
 
 
-module.exports = { getSongs, createSong, updateSong, deleteSong };
+module.exports = { getSongs, getSongById, createSong, updateSong, deleteSong };

@@ -29,7 +29,7 @@ const getAll = async (req, res = response) => {
 
 const getCollection = async (req, res = response) => {
 
-
+    console.log('prueba')
     const table = req.params.table;
     const search = req.params.search;
     const regexp = new RegExp(search, 'i');
@@ -41,36 +41,20 @@ const getCollection = async (req, res = response) => {
             data = await Song.find({ name: regexp })
                 .populate('user', 'name img')
                 .populate('playlist', 'name img');
-
-            res.json({
-                ok: true,
-                results: data
-            });
             break;
         case 'playlists':
             data = await Playlist.find({ name: regexp })
                 .populate('user', 'name img');
-
-            res.json({
-                ok: true,
-                results: data
-            })
             break;
         case 'users':
             data = await User.find({ name: regexp });
-            res.json({
-                ok: true,
-                results: data
-            })
             break;
-
         default:
             return res.status(400).json({
                 ok: false,
                 msg: 'not found'
             });
     }
-
 
     res.json({
         ok: true,

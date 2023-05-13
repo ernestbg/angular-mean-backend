@@ -45,8 +45,6 @@ const login = async (req, res = response) => {
 }
 
 const googleSignIn = async (req, res = response) => {
-
-
     try {
         const { email, name, picture } = await googleVerify(req.body.token);
 
@@ -88,14 +86,13 @@ const googleSignIn = async (req, res = response) => {
 }
 
 const renewToken = async (req, res = response) => {
-
     const uid = req.uid;
-
     const token = await createJWT(uid);
-
+    const user=await User.findById(uid);
     res.json({
         ok: true,
-        token
+        token,
+        user
     });
 }
 
