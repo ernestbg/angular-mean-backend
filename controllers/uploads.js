@@ -12,14 +12,14 @@ const fileUpload = (req, res = response) => {
     const validtypes = ['playlists', 'users', 'songs'];
     if (!validtypes.includes(type)) {
         return res.status(400).json({
-            ok: false,
+            status: false,
             msg: 'must be user, song or playlist'
         });
     }
 
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
-            ok: false,
+            status: false,
             msg: 'No files were uploaded.'
         });
     }
@@ -34,7 +34,7 @@ const fileUpload = (req, res = response) => {
     if (!validExtensions.includes(fileExtension)) {
 
         return res.status(400).json({
-            ok: false,
+            status: false,
             msg: 'Not a valid file extension.'
         });
     }
@@ -48,7 +48,7 @@ const fileUpload = (req, res = response) => {
     file.mv(uploadPath, (err) => {
         if (err) {
             return res.status(500).json({
-                ok: false,
+                status: false,
                 msg: 'error uploading file'
             });
         }
@@ -57,7 +57,7 @@ const fileUpload = (req, res = response) => {
         updateImg(type, id, filename);
 
         res.json({
-            ok: true,
+            status: true,
             msg: 'file uploaded',
             filename
         });

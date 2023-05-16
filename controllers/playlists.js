@@ -7,7 +7,7 @@ const getPlaylists = async (req, res = response) => {
     const playlists = await Playlist.find().populate('user', 'name img');
 
     res.json({
-        ok: true,
+        status: true,
         playlists
     });
 }
@@ -24,13 +24,13 @@ const createPlaylist = async (req, res = response) => {
         const playlistDB = await playlist.save();
 
         res.json({
-            ok: true,
+            status: true,
             playlist: playlistDB
         });
 
     } catch (error) {
         res.status(500).json({
-            ok: false,
+            status: false,
             msg: 'contact with admin'
         });
     }
@@ -46,7 +46,7 @@ const updatePlaylist = async (req, res = response) => {
 
         if (!playlist) {
             return res.status(404).json({
-                ok: false,
+                status: false,
                 msg: 'playlist not found'
             });
         }
@@ -59,7 +59,7 @@ const updatePlaylist = async (req, res = response) => {
         const playlistUpdated = await Playlist.findByIdAndUpdate(playlistId, playlistChanges, {new:true});
 
         res.json({
-            ok: true,
+            status: true,
             msg: 'updatePlaylist',
             playlist: playlistUpdated
         });
@@ -67,7 +67,7 @@ const updatePlaylist = async (req, res = response) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            ok: false,
+            status: false,
             msg: 'server error'
         });
     }
@@ -82,7 +82,7 @@ const deletePlaylist = async (req, res = response) => {
 
         if (!playlistDB) {
             return res.status(404).json({
-                ok: false,
+                status: false,
                 msg: 'playlist not found'
             });
         }
@@ -90,14 +90,14 @@ const deletePlaylist = async (req, res = response) => {
         await Playlist.findByIdAndDelete(id);
 
         res.json({
-            ok: true,
+            status: true,
             msg: 'playlist deleted'
         });
 
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            ok: false,
+            status: false,
             msg: 'contact with admin'
         });
     }

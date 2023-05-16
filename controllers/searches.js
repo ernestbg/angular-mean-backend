@@ -1,26 +1,18 @@
 const { response } = require('express');
-
 const User = require('../models/user');
 const Song = require('../models/song');
 const Playlist = require('../models/playlist');
 
 const getAll = async (req, res = response) => {
-
-
     const search = req.params.search;
     const regexp = new RegExp(search, 'i');
-
-
     const [users, songs, playlists] = await Promise.all([
-        Song.find({ name: regexp }),
         User.find({ name: regexp }),
+        Song.find({ name: regexp }),
         Playlist.find({ name: regexp })
     ]);
-
-
-
     res.json({
-        ok: true,
+        status: true,
         users,
         songs,
         playlists
@@ -28,8 +20,6 @@ const getAll = async (req, res = response) => {
 }
 
 const getCollection = async (req, res = response) => {
-
-    console.log('prueba')
     const table = req.params.table;
     const search = req.params.search;
     const regexp = new RegExp(search, 'i');
@@ -51,14 +41,14 @@ const getCollection = async (req, res = response) => {
             break;
         default:
             return res.status(400).json({
-                ok: false,
+                status: false,
                 msg: 'not found'
             });
     }
-
     res.json({
-        ok: true,
+        status: true,
         results: data
     });
 }
+
 module.exports = { getAll, getCollection };

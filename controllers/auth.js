@@ -3,6 +3,7 @@ const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const { createJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const { getMenu } = require('../helpers/frontend-menu');
 
 const login = async (req, res = response) => {
 
@@ -13,7 +14,7 @@ const login = async (req, res = response) => {
 
         if (!userDB) {
             res.status(404).json({
-                ok: false,
+                status: false,
                 msg: 'email not found'
             });
         }
@@ -23,7 +24,7 @@ const login = async (req, res = response) => {
 
         if (!validPassword) {
             return res.status(400).json({
-                ok: false,
+                status: false,
                 msg: 'not a valid password'
             });
         }
@@ -32,19 +33,21 @@ const login = async (req, res = response) => {
         // Generar JWT
         const token = await createJWT(userDB.id);
         res.json({
-            ok: true,
-            token
+            status: true,
+            token,
+            menu: getMenu(userDB.role)
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            ok: false,
+            status: false,
             msg: 'contact with admin'
         });
     }
 }
 
 const googleSignIn = async (req, res = response) => {
+
     try {
         const { email, name, picture } = await googleVerify(req.body.token);
 
@@ -69,17 +72,15 @@ const googleSignIn = async (req, res = response) => {
         const token = await createJWT(user.id);
 
         res.json({
-            ok: true,
-            email,
-            name,
-            picture,
-            token
+            status: true,
+            token,
+            menu: getMenu(user.role)
         });
 
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            ok: false,
+            status: false,
             msg: 'not a valid google token'
         });
     }
@@ -88,14 +89,13 @@ const googleSignIn = async (req, res = response) => {
 const renewToken = async (req, res = response) => {
     const uid = req.uid;
     const token = await createJWT(uid);
-    const user=await User.findById(uid);
+    const user = await User.findById(uid);
     res.json({
-        ok: true,
+        status: true,
         token,
-        user
+        user,
+        menu: getMenu(user.role)
     });
 }
-
-
 
 module.exports = { login, googleSignIn, renewToken }

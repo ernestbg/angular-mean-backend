@@ -5,7 +5,7 @@ const getSongs = async (req, res = response) => {
 
     const songs = await Song.find().populate('user', 'name img').populate('playlist', 'name img');
     res.json({
-        ok: true,
+        status: true,
         songs
     });
 }
@@ -15,12 +15,12 @@ const getSongById = async (req, res = response) => {
     try {
         const song = await Song.findById(songId).populate('user', 'name img').populate('playlist', 'name img');
         res.json({
-            ok: true,
+            status: true,
             song
         });
     } catch (error) {
         res.json({
-            ok: false,
+            status: false,
             msg: 'error'
         });
     }
@@ -37,12 +37,12 @@ const createSong = async (req, res = response) => {
     try {
         const songDB = await song.save();
         res.json({
-            ok: true,
+            status: true,
             song: songDB
         });
     } catch (error) {
         res.status(500).json({
-            ok: false,
+            status: false,
             msg: 'contact with admin'
         });
     }
@@ -57,7 +57,7 @@ const updateSong = async (req, res = response) => {
 
         if (!song) {
             return res.status(404).json({
-                ok: false,
+                status: false,
                 msg: 'song not found'
             });
         }
@@ -70,7 +70,7 @@ const updateSong = async (req, res = response) => {
         const songUpdated = await Song.findByIdAndUpdate(songId, songChanges, { new: true });
 
         res.json({
-            ok: true,
+            status: true,
             msg: 'updateSong',
             song: songUpdated
         });
@@ -78,7 +78,7 @@ const updateSong = async (req, res = response) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            ok: false,
+            status: false,
             msg: 'server error'
         });
     }
@@ -92,7 +92,7 @@ const deleteSong = async (req, res = response) => {
 
         if (!songDB) {
             return res.status(404).json({
-                ok: false,
+                status: false,
                 msg: 'song not found'
             });
         }
@@ -100,14 +100,14 @@ const deleteSong = async (req, res = response) => {
         await Song.findByIdAndDelete(id);
 
         res.json({
-            ok: true,
+            status: true,
             msg: 'song deleted'
         });
 
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            ok: false,
+            status: false,
             msg: 'contact with admin'
         });
     }

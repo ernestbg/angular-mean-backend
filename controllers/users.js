@@ -24,7 +24,7 @@ const getUsers = async (req, res) => {
     ]);
 
     res.json({
-        ok: true,
+        status: true,
         users,
         total
     });
@@ -38,7 +38,7 @@ const createUser = async (req, res = response) => {
 
         if (emailExists) {
             return res.status(400).json({
-                ok: false,
+                status: false,
                 msg: "el correo ya está registrado"
             });
         }
@@ -55,7 +55,7 @@ const createUser = async (req, res = response) => {
         const token = await createJWT(user.id);
 
         res.json({
-                ok: true,
+                status: true,
                 user,
                 token
             });
@@ -63,7 +63,7 @@ const createUser = async (req, res = response) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            ok: false,
+            status: false,
             msg: 'error en el servidor'
         });
     }
@@ -78,7 +78,7 @@ const updateUser = async (req, res = response) => {
 
         if (!userDB) {
             return res.status(404).json({
-                ok: false,
+                status: false,
                 msg: 'user not found'
             });
         }
@@ -89,7 +89,7 @@ const updateUser = async (req, res = response) => {
             const emailExists = await Usuario.findOne({ email });
             if ( emailExists ) {
                 return res.status(400).json({
-                    ok: false,
+                    status: false,
                     msg: 'Ya existe un usuario con ese email'
                 });
             }
@@ -99,7 +99,7 @@ const updateUser = async (req, res = response) => {
             
         } else if (userDB.email !== email) {
             return res.status(400).json({
-                ok: false,
+                status: false,
                 msg: 'Usuario de google no puede cambiar su correo'
             });
         }
@@ -107,13 +107,13 @@ const updateUser = async (req, res = response) => {
         const userUpdated = await User.findByIdAndUpdate(uid, fields, { new: true });
 
         res.json({
-            ok: true,
+            status: true,
             user: userUpdated
         });
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            ok: false,
+            status: false,
             msg: 'error en el update'
         });
     }
@@ -129,7 +129,7 @@ const deleteUser = async (req, res = response) => {
 
         if (!userDB) {
             return res.status(404).json({
-                ok: false,
+                status: false,
                 msg: 'user not found'
             });
         }
@@ -137,7 +137,7 @@ const deleteUser = async (req, res = response) => {
         await User.findByIdAndDelete(uid);
 
         res.json({
-            ok: true,
+            status: true,
             msg: 'user deleted'
         })
 
@@ -145,7 +145,7 @@ const deleteUser = async (req, res = response) => {
 
         console.log(error);
         res.status(400).json({
-            ok: false,
+            status: false,
             msg: 'contact with admin'
 
         });
