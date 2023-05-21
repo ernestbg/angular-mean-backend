@@ -39,7 +39,7 @@ const createUser = async (req, res = response) => {
         if (emailExists) {
             return res.status(400).json({
                 status: false,
-                msg: "el correo ya está registrado"
+                message: "el correo ya está registrado"
             });
         }
         const user = new User(req.body);
@@ -64,7 +64,7 @@ const createUser = async (req, res = response) => {
         console.log(error);
         res.status(500).json({
             status: false,
-            msg: 'error en el servidor'
+            message: 'error en el servidor'
         });
     }
 }
@@ -79,7 +79,7 @@ const updateUser = async (req, res = response) => {
         if (!userDB) {
             return res.status(404).json({
                 status: false,
-                msg: 'user not found'
+                message: 'user not found'
             });
         }
 
@@ -90,7 +90,7 @@ const updateUser = async (req, res = response) => {
             if ( emailExists ) {
                 return res.status(400).json({
                     status: false,
-                    msg: 'Ya existe un usuario con ese email'
+                    message: 'Ya existe un usuario con ese email'
                 });
             }
         }
@@ -100,7 +100,7 @@ const updateUser = async (req, res = response) => {
         } else if (userDB.email !== email) {
             return res.status(400).json({
                 status: false,
-                msg: 'Usuario de google no puede cambiar su correo'
+                message: 'Usuario de google no puede cambiar su correo'
             });
         }
 
@@ -114,7 +114,7 @@ const updateUser = async (req, res = response) => {
         console.log(error)
         res.status(500).json({
             status: false,
-            msg: 'error en el update'
+            message: 'error en el update'
         });
     }
 }
@@ -130,7 +130,7 @@ const deleteUser = async (req, res = response) => {
         if (!userDB) {
             return res.status(404).json({
                 status: false,
-                msg: 'user not found'
+                message: 'user not found'
             });
         }
 
@@ -138,7 +138,7 @@ const deleteUser = async (req, res = response) => {
 
         res.json({
             status: true,
-            msg: 'user deleted'
+            message: 'user deleted'
         })
 
     } catch (error) {
@@ -146,7 +146,7 @@ const deleteUser = async (req, res = response) => {
         console.log(error);
         res.status(400).json({
             status: false,
-            msg: 'contact with admin'
+            message: 'contact with admin'
 
         });
     }

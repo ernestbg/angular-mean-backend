@@ -15,7 +15,7 @@ const login = async (req, res = response) => {
         if (!userDB) {
             res.status(404).json({
                 status: false,
-                msg: 'email not found'
+                message: 'email not found'
             });
         }
 
@@ -25,23 +25,24 @@ const login = async (req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 status: false,
-                msg: 'not a valid password'
+                message: 'not a valid password'
             });
         }
 
-        console.log(userDB.id)
+        
         // Generar JWT
         const token = await createJWT(userDB.id);
         res.json({
             status: true,
             token,
-            menu: getMenu(userDB.role)
+            menu: getMenu(userDB.role),
+            id: userDB.id
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
             status: false,
-            msg: 'contact with admin'
+            message: 'contact with admin'
         });
     }
 }
@@ -66,6 +67,7 @@ const googleSignIn = async (req, res = response) => {
             user = userDB;
             user.google = true;
         }
+        console.log(user.id)
 
         await user.save();
 
@@ -81,7 +83,7 @@ const googleSignIn = async (req, res = response) => {
         console.log(error);
         res.status(400).json({
             status: false,
-            msg: 'not a valid google token'
+            message: 'not a valid google token'
         });
     }
 }
