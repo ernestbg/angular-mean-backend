@@ -3,9 +3,8 @@ const User = require('../models/user');
 
 
 const validateJWT = (req, res, next) => {
-
+    
     // Leer token
-
     const token = req.header('x-token');
     if (!token) {
         res.status(401).json({
@@ -13,8 +12,6 @@ const validateJWT = (req, res, next) => {
             message: 'missing token'
         });
     }
-
-
     try {
         const { uid } = jwt.verify(token, process.env.JWT_SECRET);
         req.uid = uid;

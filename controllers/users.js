@@ -2,6 +2,7 @@ const { response } = require('express');
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const { createJWT } = require('../helpers/jwt');
+const { ObjectId } = require('mongodb');
 
 
 const getUsers = async (req, res) => {
@@ -30,6 +31,17 @@ const getUsers = async (req, res) => {
     });
 }
 
+const getUserById = async (req, res = response) => {
+    const uid=req.params.id; 
+    const query = { _id: new ObjectId(uid) };
+    const user = await User.findById(query);
+    res.json({
+        status: true,
+        user
+    });
+
+}
+
 const createUser = async (req, res = response) => {
     const { email, password } = req.body;
 
@@ -55,10 +67,10 @@ const createUser = async (req, res = response) => {
         const token = await createJWT(user.id);
 
         res.json({
-                status: true,
-                user,
-                token
-            });
+            status: true,
+            user,
+            token
+        });
 
     } catch (error) {
         console.log(error);
@@ -84,10 +96,10 @@ const updateUser = async (req, res = response) => {
         }
 
         const { password, google, email, ...fields } = req.body;
-        if (userDB.email !== email ) {
+        if (userDB.email !== email) {
 
             const emailExists = await Usuario.findOne({ email });
-            if ( emailExists ) {
+            if (emailExists) {
                 return res.status(400).json({
                     status: false,
                     message: 'Ya existe un usuario con ese email'
@@ -96,7 +108,7 @@ const updateUser = async (req, res = response) => {
         }
         if (!userDB.google) {
             fields.email = email;
-            
+
         } else if (userDB.email !== email) {
             return res.status(400).json({
                 status: false,
@@ -118,6 +130,19 @@ const updateUser = async (req, res = response) => {
         });
     }
 }
+
+const updateFavouriteArtist = async (req, res = response) => {
+    const uid = req.params.id;
+    const favouriteArtist = req.body.favouriteArtist;
+    const filtro = { _id: new ObjectId(uid) };
+    const update = { $set: { favouriteArtist: favouriteArtist } };
+    const result = await User.updateOne(filtro, update);
+    res.json({
+        status: true,
+        result: result
+    });
+}
+
 
 
 const deleteUser = async (req, res = response) => {
@@ -152,4 +177,4 @@ const deleteUser = async (req, res = response) => {
     }
 }
 
-module.exports = { getUsers, createUser, updateUser, deleteUser }
+module.exports = { getUsers, getUserById, createUser, updateUser, updateFavouriteArtist, deleteUser }

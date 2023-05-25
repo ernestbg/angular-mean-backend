@@ -26,12 +26,16 @@ const UserSchema = Schema({
     google: {
         type: Boolean,
         default: false
+    },
+    favouriteArtist: {
+        type: String,
+        default: ''
     }
 })
 
 UserSchema.method('toJSON', function () {
     const { _v, _id, password, ...object } = this.toObject();
-    object.uid=_id;
+    object.uid = _id;
     return object;
 
 });

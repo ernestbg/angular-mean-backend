@@ -3,7 +3,6 @@ const Comment = require('../models/comment');
 
 const getComments = async (req, res = response) => {
     const comments = await Comment.find();
-
     res.json({
         status: true,
         comments
@@ -11,14 +10,12 @@ const getComments = async (req, res = response) => {
 }
 const createComment = async (req, res = response) => {
     const comment = new Comment(req.body);
-
     try {
         const commentDB = await comment.save();
         res.json({
             status: true,
             comment: commentDB
         });
-
     } catch (error) {
         res.status(500).json({
             status: false,
@@ -47,7 +44,7 @@ const updateComment = async (req, res = response) => {
             user: uid
         };
 
-        const commentUpdated = await Comment.findByIdAndUpdate(commentId, commentChanges, {new:true});
+        const commentUpdated = await Comment.findByIdAndUpdate(commentId, commentChanges, { new: true });
 
         res.json({
             status: true,
