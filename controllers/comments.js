@@ -1,14 +1,21 @@
 const { response } = require('express');
 const Comment = require('../models/comment');
 
-const getComments = async (req, res = response) => {
-    const comments = await Comment.find();
-    res.json({
-        status: true,
-        comments
-    });
+const getCommentsByAlbum = async (req, res = response) => {
+
+    console.log(req.params.albumId)
+    const comments = await Comment.find({ albumId: req.params.albumId });
+       console.log(comments)
+        res.json({
+            status: true,
+            comments
+        });
+       
+       
+   
 }
 const createComment = async (req, res = response) => {
+
     const comment = new Comment(req.body);
     try {
         const commentDB = await comment.save();
@@ -88,4 +95,4 @@ const deleteComment = async (req, res = response) => {
 
 
 
-module.exports = { getComments, createComment, updateComment, deleteComment };
+module.exports = { getCommentsByAlbum, createComment, updateComment, deleteComment };

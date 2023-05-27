@@ -1,10 +1,17 @@
 const express = require('express');
-const { dbConnection } = require('./database/config');
+const { dbConnection } = require('./database/config.js');
 const cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config();
+
+const {rateLimiterUsingThirdParty } = require('./middlewares/rateLimiter.js');
+
+
+
+
+
 
 
 //crear el servidor de express
@@ -36,17 +43,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Conexion BD
 dbConnection();
-app.use('/api/nlp', require('./routes/nlp'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/playlists', require('./routes/playlists'));
-app.use('/api/songs', require('./routes/songs'));
-app.use('/api/login', require('./routes/auth'));
-app.use('/api/all', require('./routes/searches'));
-app.use('/api/upload', require('./routes/uploads'));
-app.use('/api/comments', require('./routes/comments'));
+app.use('/api/nlp', require('./routes/nlp.js'));
+app.use('/api/users', require('./routes/users.js'));
+app.use('/api/playlists', require('./routes/playlists.js'));
+app.use('/api/songs', require('./routes/songs.js'));
+app.use('/api/login', require('./routes/auth.js'));
+app.use('/api/all', require('./routes/searches.js'));
+app.use('/api/upload', require('./routes/uploads.js'));
+app.use('/api/comments', require('./routes/comments.js'));
 
 
 app.listen(process.env.PORT, () => console.log('server running in port ' + process.env.PORT));
+
+app.use(rateLimiterUsingThirdParty);
 
 
 module.exports = app;

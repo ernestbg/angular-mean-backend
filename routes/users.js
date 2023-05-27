@@ -4,11 +4,12 @@ const { check } = require('express-validator');
 const { getUsers, getUserById, createUser, updateUser, deleteUser, updateFavouriteArtist } = require('../controllers/users');
 const { validateFields } = require('../middlewares/validate-fields');
 const { validateJWT, validateAdminRole, validateAdminRoleOrSameUser } = require('../middlewares/validate-jwt');
+const { rateLimiterUsingThirdParty } = require('../middlewares/rateLimiter');
 
 const router = Router();
 
 
-router.get('/', validateJWT, getUsers);
+router.get('/', [validateJWT, rateLimiterUsingThirdParty], getUsers);
 router.get('/:id', validateJWT, getUserById);
 
 router.post('/',
