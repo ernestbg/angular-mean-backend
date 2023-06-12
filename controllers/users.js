@@ -32,7 +32,7 @@ const getUsers = async (req, res) => {
 }
 
 const getUserById = async (req, res = response) => {
-    const uid=req.params.id; 
+    const uid = req.params.id;
     const query = { _id: new ObjectId(uid) };
     const user = await User.findById(query);
     res.json({
@@ -143,6 +143,20 @@ const updateFavouriteArtist = async (req, res = response) => {
     });
 }
 
+const updateFavouriteAlbums = async (req, res = response) => {
+    const uid = req.params.id;
+    const favouriteAlbums = req.body.favouriteAlbums;
+    const result = await User.findByIdAndUpdate(
+        uid,
+        { $push: { favouriteAlbums: favouriteAlbums } },
+        { new: true } // Opción para devolver el documento actualizado
+    );
+    res.json({
+        status: true,
+        result: result
+    });
+}
+
 
 
 const deleteUser = async (req, res = response) => {
@@ -176,5 +190,59 @@ const deleteUser = async (req, res = response) => {
         });
     }
 }
+const deleteFavouriteAlbum = async (req, res = response) => {
 
-module.exports = { getUsers, getUserById, createUser, updateUser, updateFavouriteArtist, deleteUser }
+    const userId = req.params.userId;
+    const albumId = req.params.albumId;
+
+    try {
+        const updatedDocument = await User.findOneAndUpdate(
+            { _id: userId },
+            { $pull: { favouriteAlbums: albumId } },
+            { new: true }
+        );
+
+        console.log('Documento actualizado correctamente');
+        console.log(updatedDocument);
+
+        res.status(200).json({ message: 'Documento actualizado correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar el documento:', error);
+        res.status(500).json({ error: 'Error al actualizar el documento' });
+    }
+};
+const deleteFavouriteArtists = async (req, res = response) => {
+
+    const userId = req.params.id;
+    console.log(userId)
+
+    try {
+        const updatedDocument = await User.updateOne(
+            { _id: new ObjectId(userId) }, 
+            { $unset: { favouriteArtist: 1 } }
+
+        );
+
+        console.log('Documento actualizado correctamente');
+        console.log(updatedDocument);
+
+        res.status(200).json({ message: 'Documento actualizado correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar el documento:', error);
+        res.status(500).json({ error: 'Error al actualizar el documento' });
+    }
+};
+
+
+
+module.exports = {
+    getUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    updateFavouriteArtist,
+    updateFavouriteAlbums,
+    deleteUser,
+    deleteFavouriteAlbum,
+    deleteFavouriteArtists
+}

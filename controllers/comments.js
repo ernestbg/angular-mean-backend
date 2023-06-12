@@ -2,31 +2,25 @@ const { response } = require('express');
 const Comment = require('../models/comment');
 
 const getCommentsByAlbum = async (req, res = response) => {
-
-    console.log(req.params.albumId)
-    const comments = await Comment.find({ albumId: req.params.albumId });
-       console.log(comments)
-        res.json({
-            status: true,
-            comments
-        });
-       
-       
-   
+    const comments = await Comment.find({ albumId: req.params.albumId }).sort({ timestamp: -1 });
+    res.json({
+        status: true,
+        comments
+    });
 }
-const createComment = async (req, res = response) => {
 
+const createComment = async (req, res = response) => {
     const comment = new Comment(req.body);
     try {
         const commentDB = await comment.save();
         res.json({
-            status: true,
+            status: '200',
             comment: commentDB
         });
     } catch (error) {
         res.status(500).json({
-            status: false,
-            message: 'contact with admin'
+            status: '500',
+            message: 'Error server, contact with admin'
         });
     }
 }

@@ -1,14 +1,11 @@
 const { rateLimit } = require('express-rate-limit');
-
 const moment =  require('moment');
 const redis =  require('redis');
 
-
-
 const rateLimiterUsingThirdParty = rateLimit({
-  windowMs: 24 * 60 * 60 * 1000, // 24 hrs in milliseconds
+  windowMs: 24 * 60 * 60 * 1000, // 24 horas 
   max: 5,
-  message: 'You have exceeded the 100 requests in 24 hrs limit!',
+  message: 'Has superado el limite de solicitudes permitido en 24 horas!',
   standardHeaders: true,
   legacyHeaders: false,
 });

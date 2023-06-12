@@ -30,6 +30,10 @@ const UserSchema = Schema({
     favouriteArtist: {
         type: String,
         default: ''
+    },
+    favouriteAlbums: {
+        type: [String],
+        default: []
     }
 })
 

@@ -7,15 +7,18 @@ var logger = require('morgan');
 require('dotenv').config();
 
 const {rateLimiterUsingThirdParty } = require('./middlewares/rateLimiter.js');
-
-
-
+const helmet = require("helmet")
 
 
 
 
 //crear el servidor de express
 const app = express();
+
+app.use(helmet());
+
+
+
 
 //Configurar CORS
 app.use(cors());
@@ -52,10 +55,13 @@ app.use('/api/all', require('./routes/searches.js'));
 app.use('/api/upload', require('./routes/uploads.js'));
 app.use('/api/comments', require('./routes/comments.js'));
 
+app.use(rateLimiterUsingThirdParty);
 
 app.listen(process.env.PORT, () => console.log('server running in port ' + process.env.PORT));
 
-app.use(rateLimiterUsingThirdParty);
+
+
+
 
 
 module.exports = app;

@@ -68,9 +68,7 @@ const googleSignIn = async (req, res = response) => {
             user.google = true;
         }
         console.log(user.id)
-
         await user.save();
-
         const token = await createJWT(user.id);
 
         res.json({

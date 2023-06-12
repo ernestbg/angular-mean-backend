@@ -5,10 +5,9 @@ const aposToLexForm = require('apos-to-lex-form');
 const SpellCorrector = require('spelling-corrector');
 const spellCorrector = new SpellCorrector();
 spellCorrector.loadDictionary();
-
 const router = express.Router();
 
-router.post('/s-analyzer', function(req, res, next) {
+router.post('/s-analyzer', function(req, res) {
   const { review } = req.body;
   const lexedReview = aposToLexForm(review);
   const casedReview = lexedReview.toLowerCase();
@@ -17,10 +16,9 @@ router.post('/s-analyzer', function(req, res, next) {
   const { WordTokenizer } = natural;
   const tokenizer = new WordTokenizer();
   const tokenizedReview = tokenizer.tokenize(alphaOnlyReview);
-
   tokenizedReview.forEach((word, index) => {
     tokenizedReview[index] = spellCorrector.correct(word, index);
-  })
+  });
 
   const filteredReview = SW.removeStopwords(tokenizedReview);
 

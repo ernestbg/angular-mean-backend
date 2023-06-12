@@ -3,8 +3,6 @@ const User = require('../models/user');
 
 
 const validateJWT = (req, res, next) => {
-    
-    // Leer token
     const token = req.header('x-token');
     if (!token) {
         res.status(401).json({
@@ -56,9 +54,7 @@ const validateAdminRole = async (req, res, next) => {
 const validateAdminRoleOrSameUser = async (req, res, next) => {
     const uid = req.uid;
     const id = req.params.id;
-
     try {
-
         const userDB = await User.findById(uid);
         if (!userDB) {
             return res.status(404).json({

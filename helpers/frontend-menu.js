@@ -1,20 +1,16 @@
 const getMenu = (role = 'USER_ROLE') => {
     const menu = [
-
         {
             title: 'My space',
             icon: 'mdi mdi-folder',
             submenu: [
-                { title: 'Main', url: '/' },
-                { title: 'Playlists', url: 'playlists' },
-                { title: 'Songs', url: 'songs' },
-                { title: 'Artists', url: 'artists' }
+                { title: 'Home', url: '/' },
+                { title: 'My Albums', url: 'my-albums' }
             ]
         }
     ];
-    
     if (role === 'ADMIN_ROLE') {
-        menu[1].submenu.unshift({ title: 'Users', url: 'users' })
+        menu[0].submenu.unshift({ title: 'Users', url: 'users' });
     }
     return menu;
 }
